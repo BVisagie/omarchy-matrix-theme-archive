@@ -5,12 +5,12 @@ An Omarchy 4 (Quattro) theme for the 1999 film.
 Phosphor green on void black, with olive shadows. The accent is CRT green
 (`#3CBF5C`), with brighter highlights reserved for the code-rain wallpapers.
 
-![Live desktop — After Hours wallpaper with rain, Neovim, and btop](preview.png)
+![Live desktop — Hotel Corridor wallpaper with rain, Neovim, and btop](preview.png)
 
-Earlier Omarchy 4 desktop example, captured at 3840×2160 and 150% display scaling
-before the wallpaper remaster. After Hours fills the corridor; optional terminal
-rain, the phosphor shader, and themed btop sit in the dark. The current default
-wallpaper is **Hotel Corridor**.
+Live Omarchy 4.0.6 desktop, captured at **3840×2160** and **150% display scaling**.
+The SeedVR2-mastered **Hotel Corridor** default sits behind terminal rain,
+Neovim with the optional phosphor shader, and themed btop. The demo windows are
+arranged for this screenshot; terminal rain is not started by the theme.
 
 ## Install
 
@@ -29,8 +29,8 @@ The base theme contains colors, shell styling, and static backgrounds. The
 
 Compatibility: targets **Omarchy 4 / Quickshell**, checked against the installed
 **4.0.3-1** templates and desktop. Omarchy 3's Waybar/Mako setup is not
-covered by these overrides. The published theme remains **Matrix**; the local
-development copy used for these screenshots was named **Matrix Operator**.
+covered by these overrides. The published theme is **Matrix**; older lock-screen
+examples use the local development name **Matrix Operator**.
 
 ## Palette
 
