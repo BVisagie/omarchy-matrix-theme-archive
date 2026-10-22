@@ -7,9 +7,10 @@ Phosphor green on void black, with olive shadows. The accent is CRT green
 
 ![Live desktop — After Hours wallpaper with rain, Neovim, and btop](preview.png)
 
-Live Omarchy 4 desktop, captured at 3840×2160 and 150% display scaling. After Hours
-fills the corridor; falling-code rain, the optional phosphor shader in Neovim, and
-themed btop sit in the dark.
+Earlier Omarchy 4 desktop example, captured at 3840×2160 and 150% display scaling
+before the wallpaper remaster. After Hours fills the corridor; optional terminal
+rain, the phosphor shader, and themed btop sit in the dark. The current default
+wallpaper is **Hotel Corridor**.
 
 ## Install
 
@@ -106,46 +107,109 @@ can still take precedence. No shell plugins or Hyprland behavior are installed.
 
 ## Backgrounds
 
-All six are **3840×2160**.
+**Hotel Corridor is the default wallpaper.** The bundled cycle contains four
+cinematic scenes, all mastered with **SeedVR2** at **3840×2160**, with matching
+[6K companions](extras/backgrounds-6k) at **6144×3456**:
 
-1. **Falling code** — layered Matrix-green rain (first in the theme's cycle)
-2. **Mono rain** — the same composition in white phosphor
-3. **Green street** — empty city, rain, CRT color grade
-4. **The office** — cubicles, CRTs, fluorescent
-5. **Hotel corridor** — 1999 carpet, rain on the far window
-6. **After Hours** — a worn back-office corridor, tired fluorescents, a CRT through an open door
+1. **Hotel Corridor** — faded wallpaper, timber doors, brass sconces, and rain beyond the end window (`0-hotel-corridor.jpg`)
+2. **Green Street** — the empty intersection and wet-road reflections (`3-green-street.jpg`)
+3. **The Office** — one active CRT beside a dark cubicle aisle (`4-the-office.jpg`)
+4. **After Hours** — the back-office corridor, tired fluorescents, and a partly concealed CRT (`6-after-hours.jpg`)
 
-Rain wallpapers are drawn at native 4K from complete halfwidth katakana and digits,
-with smaller distant streams, sparse bright heads, a quieter center, and subtle
-static scanlines and glow. The renderer fits actual glyph ink into pixel-sized
-cells to avoid clipping. Both palettes use seed `1999` for the same composition.
-The street, office, and hotel stills were super-resolved from their 1280×720
-masters with Real-ESRGAN. After Hours was generated at 1672×941, upscaled with
-the photographic `realesrgan-x4plus` model, then downsampled and blended with the
-source resize to retain texture. These are upscaled artworks, not native 4K
-generations.
+Omarchy sorts the files in `backgrounds/`; Hotel comes first on a fresh selection.
+Reapplying an already active theme can advance to the next image, and personal
+backgrounds can take precedence. Both code-rain wallpapers live outside the
+bundled cycle, so the theme does not select them during normal application.
 
-### Rebuild the rain
+The four cinematic sources are **1672×941** PNGs preserved in
+[extras/background-sources](extras/background-sources). After Hours retains its
+original composition, recovered from the repository's generation record. All
+four use the same installed SeedVR2 **3B FP16** workflow at **4×**, producing
+**6688×3764** PNG masters. Lanczos downsampling and a minimal central crop produce
+sRGB JPEGs at quality 95 with 4:4:4 chroma. These are **AI-upscaled artworks**;
+larger pixel dimensions do not imply native 4K or 6K source detail.
 
-On Arch, the renderer uses `python-cairo`, `python-gobject`, `python-pillow`,
-`pango`, and `noto-fonts-cjk`. Install those dependencies through your normal
-package manager if needed. Pillow also handles the final JPEG export, at quality
-95 with chroma subsampling disabled. No separate conversion step is needed.
+[Generation prompts](docs/background-prompts.json) and
+[current source/export provenance](docs/background-provenance.json) record the
+sources, processing, and hashes. Earlier [Real-ESRGAN 4K exports](extras/backgrounds-realesrgan-4k)
+and [6K exports](extras/backgrounds-realesrgan-6k) remain available for comparison.
+The [comparison record](docs/seedvr2-comparison.json) retains the original review
+and records the final SeedVR2 selection. Working files remain in ignored `output/`.
+
+### Optional code rain
+
+**Falling Code** uses irregular green clusters, larger foreground streams,
+interrupted trails, and a quiet working area. **Mono Rain** has an independent,
+sparse silver composition with asymmetric streams. Their [native 4K files](extras/backgrounds-code-4k)
+and [native 8K companions](extras/backgrounds-8k) (**7680×4320**) remain optional.
+The renderer draws glyphs directly at each size; they do not need photographic
+reconstruction. Their seed is `1999`, and the monochrome image stays grayscale.
+
+To opt into either image, select it manually or copy it into your personal
+`~/.config/omarchy/backgrounds/matrix/` directory. This is an explicit addition to
+the cycle; it is not part of the theme's default installation.
+
+### Rebuild the cinematic exports
+
+Use the existing local SeedVR2 installation and its tested
+`workflows/api/image.json`. The runner changes only the input filename, scale
+factor, and output prefix. It retains seed `17`, the tiled VAE settings, and
+`--disable-async-offload`; copies inputs under unique names; records prompts and
+history; and stops the service after the batch. It does not install or update
+anything.
 
 ```sh
-# Reproduce the two shipped 4K JPEGs (overwrites only those filenames).
+python scripts/upscale_seedvr2.py --scale 4 \
+  extras/background-sources/3-green-street.png \
+  extras/background-sources/4-the-office.png \
+  extras/background-sources/5-hotel-corridor.png \
+  extras/background-sources/6-after-hours.png
+
+# Use the run directory printed above. Requires ImageMagick.
+./scripts/export_stills output/seedvr2-YOUR-RUN-ID
+```
+
+The installation defaults to `/home/bernardv/Work/seedvr2`; override it with
+`--seedvr2-dir`. The runner prints full PNG output paths under its `data/output/`
+directory and retains master copies in a unique `output/seedvr2-*` directory.
+The exporter accepts one or more successful run directories containing all four
+scenes. It maps the original Hotel source stem `5-hotel-corridor` to the shipped
+`0-hotel-corridor`, and writes the 4K cycle and 6K companions. No reconstruction
+runs during this export step.
+
+To rebuild the selected files from the two retained local batches:
+
+```sh
+./scripts/export_stills \
+  output/seedvr2-matrix-comparison-20261022-r1 \
+  output/seedvr2-after-hours-20261022-r1
+```
+
+The earlier Real-ESRGAN recipe is retained as `scripts/export_stills_realesrgan`.
+It accepts the NCNN/Vulkan executable and model directory and writes only the
+separate Real-ESRGAN comparison folders.
+
+### Rebuild the optional rain
+
+On Arch, the renderer uses `python-cairo`, `python-gobject`, `python-pillow`,
+`pango`, and `noto-fonts-cjk`. Pillow exports JPEGs at quality 95 with chroma
+subsampling disabled.
+
+```sh
+# Defaults to extras/backgrounds-code-4k; never reintroduces rain into the cycle.
 python scripts/render_rain.py
 
-# Render other layouts outside the theme's background cycle.
+python scripts/render_rain.py extras/backgrounds-8k --width 7680 --height 4320
 python scripts/render_rain.py /tmp/matrix-ultrawide --width 3440 --height 1440
 python scripts/render_rain.py /tmp/matrix-portrait --width 2160 --height 3840
 python scripts/render_rain.py /tmp/matrix-clean --scanlines 0 --bloom 0 --format png
 ```
 
-`--cell`, `--density`, `--quiet`, `--seed`, and `--palette` allow further tuning.
-Repeated runs with the same options and rendering libraries are deterministic;
-font or library versions can affect pixels. Keep experimental PNGs in a separate
-directory to avoid duplicate entries in Omarchy's background cycle.
+`--profile auto` selects a distinct placement profile for each palette.
+`--density`, `--quiet`, `--seed`, and `--palette` allow further tuning. Glyph size
+scales automatically; `--cell` overrides the base cell in output pixels.
+Repeated runs with identical options and rendering libraries are deterministic;
+font or library versions can affect pixels.
 
 ## Lock screen
 
@@ -178,9 +242,11 @@ python -m unittest discover -s tests -v
 ./scripts/matrix-terminal --phosphor --check
 ```
 
-The GitHub Actions workflow checks unclipped glyphs, seeded exports, JPEG/portrait
-output, every shipped wallpaper's 4K dimensions, palette contrast and aliases,
-shell colors, argument handling, invalid renderer input, and GLSL compilation.
+The GitHub Actions workflow checks unclipped glyphs, seeded exports, independent
+rain profiles, consistent native 4K/8K placement, JPEG/portrait output, the exact
+four-scene cinematic cycle, Hotel-first ordering, optional rain and 4K/6K/8K
+dimensions, palette contrast and aliases, shell colors,
+argument handling, invalid renderer input, and GLSL compilation.
 The shader test requires `glslangValidator` and skips locally if it is absent;
 CI installs it. Terminal `--check` commands validate configs without opening a window.
 

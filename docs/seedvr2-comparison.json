@@ -1,0 +1,481 @@
+{
+  "date": "2026-10-22",
+  "status": "User selected SeedVR2 for the full cinematic collection, including After Hours. Hotel Corridor is the default; native code rain remains optional outside the bundled cycle.",
+  "source_provenance": "docs/background-provenance.json",
+  "installation": {
+    "directory": "/home/bernardv/Work/seedvr2",
+    "tutorial": "https://docs.comfy.org/tutorials/utility/seedvr2",
+    "configuration_changed": false,
+    "installed_or_updated": false,
+    "comfyui_version": "0.42.1",
+    "comfyui_commit": "63be2f9b82ad0dac88a7ceaa28a9cf3154125a18",
+    "torch": "2.14.1+rocm7.2",
+    "python": "3.13.17",
+    "model": "seedvr2_3b_fp16.safetensors",
+    "vae": "seedvr2_ema_vae_fp16.safetensors",
+    "async_offload_disabled": true,
+    "run_server_sha256": "7737da50854ae3bd8b441ce55a24966f752a51e0a2d5280d889ec60b5a1476fc",
+    "workflow_sha256": "f4a5110d1d7e5796e48db844035a799b2d74d031b4f6c99faabadfd8532e0392"
+  },
+  "workflow": {
+    "template": {
+      "1": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "watch_macro_shot.png"
+        }
+      },
+      "2": {
+        "class_type": "ImageScaleBy",
+        "inputs": {
+          "image": [
+            "1",
+            0
+          ],
+          "upscale_method": "lanczos",
+          "scale_by": 2.0
+        }
+      },
+      "3": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "seedvr2_3b_fp16.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "4": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "seedvr2_ema_vae_fp16.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "SeedVR2Preprocess",
+        "inputs": {
+          "resized_images": [
+            "2",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "VAEEncodeTiled",
+        "inputs": {
+          "pixels": [
+            "5",
+            0
+          ],
+          "vae": [
+            "4",
+            0
+          ],
+          "tile_size": 512,
+          "overlap": 64,
+          "temporal_size": 64,
+          "temporal_overlap": 8
+        }
+      },
+      "7": {
+        "class_type": "SeedVR2Conditioning",
+        "inputs": {
+          "model": [
+            "3",
+            0
+          ],
+          "vae_conditioning": [
+            "6",
+            0
+          ]
+        }
+      },
+      "8": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "3",
+            0
+          ],
+          "seed": 17,
+          "steps": 1,
+          "cfg": 1.0,
+          "sampler_name": "euler",
+          "scheduler": "simple",
+          "positive": [
+            "7",
+            0
+          ],
+          "negative": [
+            "7",
+            1
+          ],
+          "latent_image": [
+            "6",
+            0
+          ],
+          "denoise": 1.0
+        }
+      },
+      "9": {
+        "class_type": "VAEDecodeTiled",
+        "inputs": {
+          "samples": [
+            "8",
+            0
+          ],
+          "vae": [
+            "4",
+            0
+          ],
+          "tile_size": 512,
+          "overlap": 64,
+          "temporal_size": 64,
+          "temporal_overlap": 8
+        }
+      },
+      "10": {
+        "class_type": "SeedVR2PostProcessing",
+        "inputs": {
+          "images": [
+            "9",
+            0
+          ],
+          "original_resized_images": [
+            "2",
+            0
+          ],
+          "color_correction_method": "none"
+        }
+      },
+      "11": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "10",
+            0
+          ],
+          "filename_prefix": "SeedVR2/images/upscaled"
+        }
+      }
+    },
+    "mutations": [
+      "1.inputs.image",
+      "2.inputs.scale_by",
+      "11.inputs.filename_prefix"
+    ],
+    "scale": 4,
+    "api": "http://127.0.0.1:8188",
+    "processing": "Unique input copies; sequential POST /prompt and poll /history/<prompt_id>; require successful node 11 PNG output.",
+    "run_records": "output/seedvr2-matrix-comparison-20261022-r1"
+  },
+  "export": {
+    "description": "Same ImageMagick 7.1.2-34 Lanczos fill and minimal central crop as Real-ESRGAN exports; sRGB JPEG quality 95, 4:4:4, no extra sharpening.",
+    "resolutions": {
+      "4k": [
+        3840,
+        2160
+      ],
+      "6k": [
+        6144,
+        3456
+      ]
+    },
+    "source_detail": "AI-upscaled from 1672x941 generated originals; neither 4K nor 6K is native generated/captured detail."
+  },
+  "artworks": [
+    {
+      "stem": "3-green-street",
+      "source": "extras/background-sources/3-green-street.png",
+      "source_size": [
+        1672,
+        941
+      ],
+      "source_sha256": "488c715b7e34bfbf1cdf72cd45cde68ccf3bda2b49d7a83a2909e143c9c90a3a",
+      "prompt_id": "a6392195-d4a2-4fde-b253-7e0ee4fc7f40",
+      "seconds": 67.631,
+      "api_output": "/home/bernardv/Work/seedvr2/data/output/SeedVR2/matrix/seedvr2-matrix-comparison-20261022-r1/3-green-street_00001_.png",
+      "project_master_copy": "output/seedvr2-matrix-comparison-20261022-r1/masters/3-green-street-x4.png",
+      "master_size": [
+        6688,
+        3764
+      ],
+      "master_sha256": "6af960f08f989833992fbfcbda95bfa96b3bd13ab5950243ea5354b0a0467c66",
+      "real_esrgan_master": "output/background-overhaul/masters/3-green-street-x4.png",
+      "real_esrgan_master_sha256": "1742e6e7d7e5caa5279ee547aca2c1618d1ace8659ccf9d2150390ebc819c974",
+      "exports": [
+        {
+          "path": "extras/backgrounds-seedvr2-4k/3-green-street.jpg",
+          "size": [
+            3840,
+            2160
+          ],
+          "bytes": 3106306,
+          "sha256": "09ecfb136d06d78df977ff14ba9b5ed998a975897c025a571222316d27c72fdf",
+          "master": "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/3-green-street-x4.png",
+          "command": [
+            "magick",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/3-green-street-x4.png",
+            "-filter",
+            "Lanczos",
+            "-resize",
+            "3840x2160^",
+            "-gravity",
+            "center",
+            "-extent",
+            "3840x2160",
+            "-colorspace",
+            "sRGB",
+            "-strip",
+            "-sampling-factor",
+            "4:4:4",
+            "-quality",
+            "95",
+            "-define",
+            "jpeg:optimize-coding=true",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/extras/backgrounds-seedvr2-4k/3-green-street.jpg"
+          ]
+        },
+        {
+          "path": "extras/backgrounds-seedvr2-6k/3-green-street.jpg",
+          "size": [
+            6144,
+            3456
+          ],
+          "bytes": 6570022,
+          "sha256": "d79c12abfbb624f90d9d9c46086eb19963031d932d35ade5d50b19c041603e50",
+          "master": "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/3-green-street-x4.png",
+          "command": [
+            "magick",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/3-green-street-x4.png",
+            "-filter",
+            "Lanczos",
+            "-resize",
+            "6144x3456^",
+            "-gravity",
+            "center",
+            "-extent",
+            "6144x3456",
+            "-colorspace",
+            "sRGB",
+            "-strip",
+            "-sampling-factor",
+            "4:4:4",
+            "-quality",
+            "95",
+            "-define",
+            "jpeg:optimize-coding=true",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/extras/backgrounds-seedvr2-6k/3-green-street.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "stem": "4-the-office",
+      "source": "extras/background-sources/4-the-office.png",
+      "source_size": [
+        1672,
+        941
+      ],
+      "source_sha256": "170d40c6e4527d3fc10af4deeb520eda7ab51c249292b7990b923cbec9d9dba0",
+      "prompt_id": "d661c184-0216-4738-9603-18a579c57e8c",
+      "seconds": 66.816,
+      "api_output": "/home/bernardv/Work/seedvr2/data/output/SeedVR2/matrix/seedvr2-matrix-comparison-20261022-r1/4-the-office_00001_.png",
+      "project_master_copy": "output/seedvr2-matrix-comparison-20261022-r1/masters/4-the-office-x4.png",
+      "master_size": [
+        6688,
+        3764
+      ],
+      "master_sha256": "741488fbd195d21260f64e15793ceccf5e2f86897a618715a5102b2b82ae8806",
+      "real_esrgan_master": "output/background-overhaul/masters/4-the-office-x4.png",
+      "real_esrgan_master_sha256": "b5c0ff3a0e29038f169ba43e2874deeaabb22a23712a19b7a01de699409de6b8",
+      "exports": [
+        {
+          "path": "extras/backgrounds-seedvr2-4k/4-the-office.jpg",
+          "size": [
+            3840,
+            2160
+          ],
+          "bytes": 2047149,
+          "sha256": "bb7655b14d15a82db31420ebb1ef36bbb9d1eecd9a18f9362f64c6f440bc293c",
+          "master": "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/4-the-office-x4.png",
+          "command": [
+            "magick",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/4-the-office-x4.png",
+            "-filter",
+            "Lanczos",
+            "-resize",
+            "3840x2160^",
+            "-gravity",
+            "center",
+            "-extent",
+            "3840x2160",
+            "-colorspace",
+            "sRGB",
+            "-strip",
+            "-sampling-factor",
+            "4:4:4",
+            "-quality",
+            "95",
+            "-define",
+            "jpeg:optimize-coding=true",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/extras/backgrounds-seedvr2-4k/4-the-office.jpg"
+          ]
+        },
+        {
+          "path": "extras/backgrounds-seedvr2-6k/4-the-office.jpg",
+          "size": [
+            6144,
+            3456
+          ],
+          "bytes": 4647093,
+          "sha256": "78c1f9ec2af6906364bd9d2e954806c242330f3504be5468afd93d60946efc99",
+          "master": "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/4-the-office-x4.png",
+          "command": [
+            "magick",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/4-the-office-x4.png",
+            "-filter",
+            "Lanczos",
+            "-resize",
+            "6144x3456^",
+            "-gravity",
+            "center",
+            "-extent",
+            "6144x3456",
+            "-colorspace",
+            "sRGB",
+            "-strip",
+            "-sampling-factor",
+            "4:4:4",
+            "-quality",
+            "95",
+            "-define",
+            "jpeg:optimize-coding=true",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/extras/backgrounds-seedvr2-6k/4-the-office.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "stem": "5-hotel-corridor",
+      "source": "extras/background-sources/5-hotel-corridor.png",
+      "source_size": [
+        1672,
+        941
+      ],
+      "source_sha256": "a39ff0dc80b5de1e717c2418c2e9b02cd7f0f4c452dc7cd4332cff77a637221e",
+      "prompt_id": "cb49a431-cad8-4b88-a2c2-965648f3babc",
+      "seconds": 67.303,
+      "api_output": "/home/bernardv/Work/seedvr2/data/output/SeedVR2/matrix/seedvr2-matrix-comparison-20261022-r1/5-hotel-corridor_00001_.png",
+      "project_master_copy": "output/seedvr2-matrix-comparison-20261022-r1/masters/5-hotel-corridor-x4.png",
+      "master_size": [
+        6688,
+        3764
+      ],
+      "master_sha256": "4b2462d032523b90bd59c2526c09a2510a9efc4e3de081c52da6f101b9b97ab8",
+      "real_esrgan_master": "output/background-overhaul/masters/5-hotel-corridor-x4.png",
+      "real_esrgan_master_sha256": "a1129aa14bd8f3155648b8090c08bc02c8dd9af74d66a3c41630e2da55c3fc71",
+      "exports": [
+        {
+          "path": "extras/backgrounds-seedvr2-4k/5-hotel-corridor.jpg",
+          "size": [
+            3840,
+            2160
+          ],
+          "bytes": 3084501,
+          "sha256": "7196ddb85610bb6b67daf2331c338b525131911685ae474af51e6084b73f6395",
+          "master": "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/5-hotel-corridor-x4.png",
+          "command": [
+            "magick",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/5-hotel-corridor-x4.png",
+            "-filter",
+            "Lanczos",
+            "-resize",
+            "3840x2160^",
+            "-gravity",
+            "center",
+            "-extent",
+            "3840x2160",
+            "-colorspace",
+            "sRGB",
+            "-strip",
+            "-sampling-factor",
+            "4:4:4",
+            "-quality",
+            "95",
+            "-define",
+            "jpeg:optimize-coding=true",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/extras/backgrounds-seedvr2-4k/5-hotel-corridor.jpg"
+          ]
+        },
+        {
+          "path": "extras/backgrounds-seedvr2-6k/5-hotel-corridor.jpg",
+          "size": [
+            6144,
+            3456
+          ],
+          "bytes": 6701194,
+          "sha256": "ea28d4bdedda954acea9f536105a4a7032d12c77515f3fac6d818cf26abd7646",
+          "master": "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/5-hotel-corridor-x4.png",
+          "command": [
+            "magick",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/output/seedvr2-matrix-comparison-20261022-r1/masters/5-hotel-corridor-x4.png",
+            "-filter",
+            "Lanczos",
+            "-resize",
+            "6144x3456^",
+            "-gravity",
+            "center",
+            "-extent",
+            "6144x3456",
+            "-colorspace",
+            "sRGB",
+            "-strip",
+            "-sampling-factor",
+            "4:4:4",
+            "-quality",
+            "95",
+            "-define",
+            "jpeg:optimize-coding=true",
+            "/home/bernardv/Projects/T3Code/omarchy-matrix-theme/extras/backgrounds-seedvr2-6k/5-hotel-corridor.jpg"
+          ]
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "api": "All three histories completed successfully",
+    "pngs": "All three saved outputs and project master copies are 6688x3764 and have identical SHA256 hashes",
+    "exports": "All six JPEGs decoded successfully at target dimensions, sRGB, 4:4:4",
+    "preservation": "All 14 pre-existing source/export hashes matched; launch script and installed workflow hashes match pre-batch values",
+    "tests": "All 32 unit tests passed (17 mocked SeedVR2 runner checks and 15 existing theme checks)",
+    "service_stopped": true,
+    "systemd_service_state": "inactive",
+    "comparison_gallery": "output/seedvr2-comparison/review.html",
+    "visual_review": "Independent review inspected all source images, both methods as full frames, matched native crops, and finished 4K crops. No obvious processing-tile seams. Reconstructed texture and small hardware remain imperfect.",
+    "gallery": "Desktop728px and phone360px previews passed; nine views, 18 image references, method buttons, split and native sizing exercised."
+  },
+  "review": {
+    "3-green-street": {
+      "preference": "Real-ESRGAN",
+      "reason": "Calmer rain, pavement reflections and phone edges. SeedVR2 exaggerates contours and embossed texture, still visible at 4K. Both retain source geometry and green lighting."
+    },
+    "4-the-office": {
+      "preference": "SeedVR2 narrowly at 4K",
+      "reason": "More fabric, ceiling, chair and carpet texture; invented CRT lettering and irregular small hardware remain conspicuous at native master scale. Real-ESRGAN is the softer alternative. Composition and olive palette preserved."
+    },
+    "5-hotel-corridor": {
+      "preference": "Real-ESRGAN",
+      "reason": "Quieter wallpaper and carpet. SeedVR2 improves cart metal and cloth folds but raises wallpaper texture and exaggerates towel and bag contours. Composition, warm sconces and ambient green preserved."
+    },
+    "choice": "User chose SeedVR2 for all cinematic scenes; previous review preferences are retained as historical observations."
+  },
+  "final_selection": {
+    "provenance": "docs/background-provenance.json",
+    "default_background": "backgrounds/0-hotel-corridor.jpg",
+    "after_hours_run": "output/seedvr2-after-hours-20261022-r1",
+    "after_hours_api_output": "/home/bernardv/Work/seedvr2/data/output/SeedVR2/matrix/seedvr2-after-hours-20261022-r1/6-after-hours_00001_.png",
+    "earlier_real_esrgan_exports": [
+      "extras/backgrounds-realesrgan-4k",
+      "extras/backgrounds-realesrgan-6k"
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "direction": "Cinematic 1999 Matrix: restrained green, believable spaces, film texture.",
+  "tool": "Built-in image_gen.imagegen",
+  "note": "Generation is not deterministic. These are the exact prompts used for the cinematic source candidates; final source files and export processing are documented separately.",
+  "candidates": [
+    {
+      "id": "office-a",
+      "kind": "generate",
+      "prompt": "Use case: historical-scene.\nAsset type: premium desktop wallpaper for a restrained cinematic Matrix (1999) theme, landscape 16:9. Produce the largest available resolution, ideally 3840x2160 or higher, with real fine material detail.\nScene: an empty corporate office floor at 2am in 1999, a photographically convincing maze of muted olive-gray fabric cubicles, suspended acoustic ceiling, tired greenish-white fluorescent practical lights. Everything is physically plausible and quietly lived in.\nComposition: eye-level wide cinematic 35mm lens looking diagonally along an aisle. One believable beige CRT workstation sits off-center in the lower right third, visible but not oversized, its monitor giving a small pool of muted phosphor green. A beige keyboard with straight rows of keys, a corded desk phone, and only a couple sheets of paper. Repeating cubicles recede into dark distance. Most screens are off. The center and left have large calm shadow shapes for desktop windows, still with visible texture.\nLighting: low-key practical lighting, only a few ceiling fixtures illuminated, preserved mid-shadow detail. Restrained green cast integrated into lighting, olive shadows, charcoal blacks, occasional warm aged beige. The focal monitor has small dim rows of green terminal marks rather than readable prominent words. Highlight rolloff gentle, lights not blown out.\nStyle: photorealistic high-budget 1999 neo-noir film production still, precise geometry, natural aged plastic, woven fabric and worn laminate, extremely fine organic film texture rather than digital noise, no soft painterly smoothing. Intrigue and corporate alienation through absence.\nConstraints: edge-to-edge image, no borders, no frame, no letterbox, no text overlay, no watermark, no logos, no people, no magenta, no pink tubes, no neon cyberpunk signage, no floating code, no enormous foreground props, no fisheye, no thick fog. Dark wallpaper with clear tonal hierarchy and strong detail when viewed at 4K.",
+      "source_size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "office-b",
+      "kind": "generate",
+      "prompt": "Use case: historical-scene.\nAsset type: premium desktop wallpaper for a restrained cinematic Matrix (1999) theme, landscape 16:9. Produce the largest available resolution, ideally 3840x2160 or higher, with real fine material detail.\nScene: an empty corporate office floor at 2am in 1999, a photographically convincing maze of muted olive-gray fabric cubicles, suspended acoustic ceiling, tired greenish-white fluorescent practical lights. Everything is physically plausible and quietly lived in. More of the room is in olive-black shadow, only three dim fluorescent fixtures are lit. No plants. Retain visible material texture in shadows.\nComposition: eye-level cinematic 40mm lens from the end of a narrow cubicle aisle, slightly closer and more intimate, looking past a workstation into a long quiet office. One believable beige CRT workstation sits off-center in the left third, visible but not oversized, its monitor giving a small pool of muted phosphor green. A beige keyboard with straight rows of keys, a corded desk phone, and only a couple sheets of paper. Repeating cubicles recede into dark distance. Most screens are off. The center and right have large calm shadow shapes for desktop windows, still with visible texture.\nLighting: low-key practical lighting, only a few ceiling fixtures illuminated, preserved mid-shadow detail. Restrained green cast integrated into lighting, olive shadows, charcoal blacks, occasional warm aged beige. The focal monitor has small dim rows of green terminal marks rather than readable prominent words. Highlight rolloff gentle, lights not blown out.\nStyle: photorealistic high-budget 1999 neo-noir film production still, precise geometry, natural aged plastic, woven fabric and worn laminate, extremely fine organic film texture rather than digital noise, no soft painterly smoothing. Intrigue and corporate alienation through absence.\nConstraints: edge-to-edge image, no borders, no frame, no letterbox, no text overlay, no watermark, no logos, no people, no magenta, no pink tubes, no neon cyberpunk signage, no floating code, no enormous foreground props, no fisheye, no thick fog. Dark wallpaper with clear tonal hierarchy and strong detail when viewed at 4K.",
+      "source_size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "street-a",
+      "kind": "edit",
+      "references": [
+        "backgrounds/3-green-street.jpg at commit 01b09c3"
+      ],
+      "prompt": "Use case: lighting-weather and precise-object-edit.\nAsset type: premium cinematic 1999 Matrix desktop wallpaper, full-bleed 16:9; render at the largest supported resolution with maximum material detail, ideally 3840x2160.\nInput image 1 is the edit target, an existing rain-soaked empty city intersection. Preserve its oblique camera angle, office-block architecture, abandoned intersection, payphones at street level, receding lamps, and rainy-night atmosphere.\nImprove the image as if this is a pristine higher-quality cinematography master of the same scene. Remove the rounded black film frame completely; the scene must extend cleanly to all four edges. Reduce the uniform yellow/lime cast, retaining restrained olive-green shadows, charcoal black architecture, neutral gray glass, and small warm lamp cores. Turn off roughly half the office windows so light forms deliberate localized groups; concentrate the narrative light near a payphone/entrance on the right half. Tame broad blown-out pavement reflections while retaining realistic wet asphalt texture and ripples. Rain should have varied fine streak sizes and mainly catch practical light, not form a uniform screen of streaks.\nImprove geometric consistency of window mullions, curb edges and street fixtures. Preserve believable photographic detail at full resolution; no waxy surfaces or thick sharpening outlines. Use subtle fine film texture. Keep mid-shadow information, quiet dark space and a crisp focal area, suitable behind desktop windows.\nDo not add people, vehicles, prominent words, logos, floating code, futuristic architecture, neon cyberpunk colors, purple, blue neon, decorative scratches, borders, vignette frames or letterboxing. Preserve the original scene identity and viewpoint. This is a lighting/material/framing refinement, not a completely different street.",
+      "source_size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "street-b",
+      "kind": "edit",
+      "references": [
+        "street-a"
+      ],
+      "prompt": "Use case: lighting-weather.\nInput image is the edit target. Keep the exact street composition, geometry, payphones, rain, texture, storefront, reflections and full-bleed framing.\nChange only the color grade and light color to restore restrained cinematic 1999 Matrix atmosphere. The current image is too neutral and amber. Give shadowed concrete and glass a subtle desaturated bottle-green/olive cast. Change the interior fluorescent lights to muted greenish-white, and the street lamps from orange to pale sickly yellow-green, reflecting these changes naturally in the wet asphalt. Black areas stay nearly black with green lift; highlights remain mostly pale, not saturated neon. Preserve fine photographic detail, believable colors, local contrast, and calm dark areas. Make the green identity evident without tinting every surface equally. Keep small red traffic signals subdued. No new objects, no people, no text overlay, no border. Largest possible image resolution, ideally 3840x2160; landscape 16:9.",
+      "source_size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "hotel-a",
+      "kind": "generate",
+      "prompt": "Use case: historical-scene.\nAsset: photographic cinematic desktop wallpaper for a 1999 Matrix theme, landscape 16:9, full-bleed to every edge. Largest available resolution, ideally 3840x2160 or higher; fine inspectable real-world material detail.\nScene: empty narrow corridor of an old downtown hotel in 1999 at night, with faded olive patterned wallpaper, dark walnut room doors, aged brass wall sconces, muted worn burgundy/olive carpet, plaster ceiling. A rain-streaked divided window at the far end reveals only a few dim greenish city windows. Slightly off-center eye-level 40mm view, a long vanishing point, architecture is straight and credible. A small housekeeping cart tucked against one wall near the far end is the sole narrative detail.\nLighting: only three sconces are lit, softly, their aged warm-white glass creating small pools of light. The rest of the corridor falls into deep olive-green shadow with material detail retained. Rainy window gives a quiet desaturated green fill. Keep the upper edge and much of the foreground dark enough for the desktop. Modest local highlights, no glaring blown-out bulbs, no broad bright walls. Cinematic 1999 Matrix green cast, darkness and mystery without horror decoration.\nMaterials: believable wallpaper seams, frayed carpet pile, tarnished brass, natural wood grain, subtle wear at door handles. Precise door geometry, authentic hinges and handles. Fine restrained film texture, a pristine movie master, not muddy grain or painterly blur.\nConstraints: empty, no people, no ghosts, no futuristic elements, no neon advertisements, no pink or magenta, no EXIT signs repeated over room doors, no prominent text or logos, no code rain overlay, no fake film scratches, no rounded border, no black frame, no letterbox. This is an elegant subdued city hotel, materially distinct from an institutional office corridor.",
+      "source_size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "street-c",
+      "kind": "edit",
+      "references": [
+        "street-b"
+      ],
+      "prompt": "Use case: precise-object-edit.\nInput image is the edit target. Preserve the exact camera viewpoint, crop, office buildings, window mullions, street fixtures, payphones, traffic signals, color grade and composition.\nMake one localized realism correction to the wet foreground asphalt and rain. The foreground pavement currently has curled embossed ridges and squiggly wormlike relief. Replace that synthetic-looking texture with photographically believable wet fine-grain asphalt and smooth shallow puddles, with subtle small raindrop ripples and broken reflections. Ground is flat, reflections sit on the surface, no etched lines or thick relief. Reduce the brightest foreground reflection streaks a little, keeping attractive small highlights and readable shadows. Also reduce dense rain streaks against the unlit facades; visible rain should be concentrated near the practical lights. Keep the restrained greenish fluorescent lighting and olive-black shadows unchanged. Do not relight the whole scene or alter buildings. No new objects, no people, no words, no borders.\nOutput full-bleed landscape 16:9 at the largest supported resolution, ideally 3840x2160, with fine photographic detail. This is an isolated material/rain correction, all other design elements must stay consistent.",
+      "source_size": [
+        1672,
+        941
+      ],
+      "selected": false,
+      "note": "Rejected: foreground ripple relief remained too strong."
+    },
+    {
+      "id": "street-d",
+      "kind": "edit",
+      "references": [
+        "street-b"
+      ],
+      "prompt": "Edit this image. Preserve the buildings, viewpoint, lighting, fixtures and overall dark green cinematic color grade exactly. Replace the entire foreground road surface with flat, dark, smooth rain-wet asphalt and broad nearly still puddles. The puddles have soft vertical green light reflections interrupted by just a few tiny concentric raindrop rings. Most of the road is smooth dark negative space. Remove all the curled ridges, swirls, sharp squiggly lines, and dense relief texture in the current road. It should look like a real wet city road photographed with a one-quarter-second exposure: fine falling rain and softly blurred reflections. Photorealistic. Full-bleed 16:9, highest available resolution.",
+      "source_size": [
+        1672,
+        941
+      ],
+      "selected": true
+    },
+    {
+      "id": "after-hours-original",
+      "kind": "generate",
+      "date": "2026-09-13",
+      "source_record": "d3bf00f77c376cd9b9a3f7ae61f6e7db52ce354c:docs/wallpaper-review/after-hours-prompt.md",
+      "prompt": "Create ONE original cinematic wallpaper concept inspired specifically by the mundane, oppressive office interiors of the 1999 film The Matrix. This is a completely new composition, not a reception lobby.\n\nScene: a cramped after-hours back-office corridor inside a worn mid-century downtown office building, photographed in 1999. Eye-level 35mm lens, slightly off-center composition, long narrow corridor with a low suspended acoustic-tile ceiling, aged pale institutional green walls, dark scuffed wood doorframes, dull olive carpet with a subtle worn pattern. Three old fluorescent ceiling fixtures recede into shadow, some sections of the corridor unlit. On the right, a half-open battered office door reveals the side of ONE beige 1990s CRT computer sitting on a cheap gray laminate desk inside a small cubicle office, a simple corded telephone and a few paper folders. Only a weak phosphor-green glow from the screen; the monitor should feel incidental, not staged as a product. At the far end a small dirty wired-glass window catches faint greenish city light and rain; no panoramic view. One low metal filing cabinet recessed by a doorway. All furniture and architecture cheap, practical, slightly neglected, physically plausible. No decorative lobby plants or framed art.\n\nMood and photographic treatment: a believable location from a late-1990s paranoid techno-thriller, eerily empty, anonymous corporate drudgery, a place someone has just left in a hurry. Strong depth, heavy shadows with readable dark detail, subdued green/olive color contamination from fluorescent practicals, neutral dirty beige highlights, cool sickly white lamps, tiny CRT green accent. Underexposed 35mm motion-picture negative, restrained fine film grain, subtle optical softness in distant areas while foreground materials and geometry stay resolved. Imperfect real location, not glossy architectural photography, not a modern luxury office, not an abandoned horror ruin. No sepia or warm amber color wash. No fog, no visible volumetric beams, no rain indoors.\n\nComposition for a desktop: wide landscape 16:9, full bleed to every edge, dark quiet foreground and side walls for terminal windows, focal interest toward the corridor's far third. No border, no rounded frame, no fake film scratches. No people, silhouettes, faces, logos, readable text, neon signage, modern screens, futuristic props, floating code, saturated emerald nightclub lighting, purple or magenta lighting, polished marble or large walnut reception desks. Preserve the specific 1999 feeling through mundane aging materials and oppressive fluorescent light, rather than overt science fiction.\nDeliver 3840x2160 if supported; prioritize a convincing cinematic composition.",
+      "source_size": [
+        1672,
+        941
+      ],
+      "selected": true
+    }
+  ],
+  "selected": {
+    "office": "office-b",
+    "street": "street-d",
+    "hotel": "hotel-a",
+    "after_hours": "after-hours-original"
+  }
+}

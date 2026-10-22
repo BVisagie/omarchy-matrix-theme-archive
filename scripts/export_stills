@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+"""Export cinematic 4K/6K JPEGs from completed SeedVR2 run directories.
+
+Requires ImageMagick. Uses preserved PNG masters without running an upscaler.
+"""
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+
+
+ROOT = Path(__file__).resolve().parent.parent
+MASTER_SIZE = (6688, 3764)
+EXPORT_NAMES = {
+    "5-hotel-corridor": "0-hotel-corridor.jpg",
+    "3-green-street": "3-green-street.jpg",
+    "4-the-office": "4-the-office.jpg",
+    "6-after-hours": "6-after-hours.jpg",
+}
+VARIANTS = (("3840x2160", "backgrounds"), ("6144x3456", "extras/backgrounds-6k"))
+
+
+def load_masters(run_dirs):
+    """Validate the complete manifest set and every master before any writes."""
+    jobs = {}
+    for run_dir in run_dirs:
+        run_dir = Path(run_dir).expanduser().resolve()
+        manifest_path = run_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        if not isinstance(manifest, dict) or manifest.get("status") != "success":
+            raise ValueError(f"Run did not succeed: {manifest_path}")
+        if manifest.get("scale") != 4:
+            raise ValueError(f"Expected a 4x SeedVR2 run: {manifest_path}")
+        entries = manifest.get("jobs")
+        if not isinstance(entries, list) or not entries:
+            raise ValueError(f"Missing jobs: {manifest_path}")
+        for job in entries:
+            if not isinstance(job, dict) or job.get("status") != "success":
+                raise ValueError(f"Job did not succeed: {manifest_path}")
+            stem = job.get("stem")
+            if not isinstance(stem, str) or stem not in EXPORT_NAMES:
+                raise ValueError(f"Unexpected scene {stem!r}: {manifest_path}")
+            if stem in jobs:
+                raise ValueError(f"Duplicate scene: {stem}")
+            if job.get("output_dimensions") != list(MASTER_SIZE):
+                raise ValueError(f"Expected a 6688x3764 master: {stem}")
+            master_path = job.get("master_path")
+            digest = job.get("output_sha256")
+            if not isinstance(master_path, str) or not master_path:
+                raise ValueError(f"Missing master_path: {stem}")
+            if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", digest):
+                raise ValueError(f"Invalid output_sha256: {stem}")
+            master = (run_dir / master_path).resolve()
+            jobs[stem] = (master, digest.lower())
+
+    missing = EXPORT_NAMES.keys() - jobs.keys()
+    if missing:
+        raise ValueError(f"Missing scenes: {', '.join(sorted(missing))}")
+
+    masters = {}
+    for stem in EXPORT_NAMES:
+        master, expected_digest = jobs[stem]
+        with master.open("rb") as stream:
+            if stream.read(8) != b"\x89PNG\r\n\x1a\n":
+                raise ValueError(f"Master is not a PNG: {master}")
+            stream.seek(0)
+            digest = hashlib.file_digest(stream, "sha256").hexdigest()
+        if digest != expected_digest:
+            raise ValueError(f"SHA-256 mismatch: {master}")
+        # Decode the full image, not just its header; warnings include truncated PNGs.
+        result = subprocess.run(
+            ["magick", "-regard-warnings", str(master), "-format", "%m %w %h", "info:"],
+            check=True, capture_output=True, text=True,
+        )
+        if result.stdout.split() != ["PNG", *map(str, MASTER_SIZE)]:
+            raise ValueError(f"Expected a valid 6688x3764 PNG: {master}")
+        masters[stem] = master
+    return masters
+
+
+def export(run_dirs, root=ROOT):
+    masters = load_masters(run_dirs)
+    root = Path(root)
+    # All decoding/resizing must succeed before replacing any installed JPEG.
+    # Keep staging on the destination filesystem for atomic individual renames.
+    with tempfile.TemporaryDirectory(prefix=".export-stills-", dir=root) as temporary:
+        staged = []
+        for dimensions, directory in VARIANTS:
+            stage_dir = Path(temporary) / directory
+            stage_dir.mkdir(parents=True)
+            for stem, filename in EXPORT_NAMES.items():
+                image = stage_dir / filename
+                subprocess.run([
+                    "magick", str(masters[stem]), "-filter", "Lanczos",
+                    "-resize", f"{dimensions}^", "-gravity", "center",
+                    "-extent", dimensions, "-colorspace", "sRGB", "-strip",
+                    "-sampling-factor", "4:4:4", "-quality", "95",
+                    "-define", "jpeg:optimize-coding=true", str(image),
+                ], check=True)
+                staged.append((image, root / directory / filename))
+        for _, destination in staged:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if destination.is_dir():
+                raise ValueError(f"Destination is a directory: {destination}")
+        for image, destination in staged:
+            image.replace(destination)
+    print("Exported 4 cinematic scenes to backgrounds/ (4K) and extras/backgrounds-6k/ (6K).")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("run_dirs", nargs="+", type=Path,
+                        help="SeedVR2 run directories containing successful manifest.json files")
+    args = parser.parse_args()
+    try:
+        export(args.run_dirs)
+    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+        detail = error.stderr if isinstance(error, subprocess.CalledProcessError) else None
+        print(f"Export failed: {str(detail).strip() if detail else error}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

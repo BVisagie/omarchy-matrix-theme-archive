@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Rebuild optional RealESRGAN 4K/6K JPEGs from preserved generation sources.
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  printf 'Usage: %s /path/to/realesrgan-ncnn-vulkan /path/to/models\n' "$0" >&2
+  exit 2
+fi
+
+upscaler=$(realpath -- "$1")
+models=$(realpath -- "$2")
+root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+work="$root/output/background-overhaul/masters"
+
+[[ -x "$upscaler" ]] || { printf 'Upscaler is not executable: %s\n' "$upscaler" >&2; exit 1; }
+for suffix in bin param; do
+  [[ -f "$models/realesrgan-x4plus.$suffix" ]] || {
+    printf 'Missing photographic model: %s/realesrgan-x4plus.%s\n' "$models" "$suffix" >&2
+    exit 1
+  }
+done
+command -v magick >/dev/null || { printf 'ImageMagick is required.\n' >&2; exit 1; }
+
+mkdir -p -- "$work" "$root/extras/backgrounds-realesrgan-4k" "$root/extras/backgrounds-realesrgan-6k"
+for stem in 3-green-street 4-the-office 5-hotel-corridor; do
+  source="$root/extras/background-sources/$stem.png"
+  master="$work/$stem-x4.png"
+  [[ -f "$source" ]] || { printf 'Missing source: %s\n' "$source" >&2; exit 1; }
+  printf 'Restoring %s with realesrgan-x4plus...\n' "$stem"
+  if ! "$upscaler" -i "$source" -o "$master" -m "$models" \
+      -n realesrgan-x4plus -s 4 -t 256 -j 1:1:1 >"$work/$stem.log" 2>&1; then
+    cat -- "$work/$stem.log" >&2
+    exit 1
+  fi
+  # The generated sources are very slightly taller than 16:9. Scale uniformly
+  # and trim centrally; never stretch the scene or add a decorative border.
+  for dimensions in 3840x2160 6144x3456; do
+    destination="$root/extras/backgrounds-realesrgan-4k"
+    [[ "$dimensions" == 6144x3456 ]] && destination="$root/extras/backgrounds-realesrgan-6k"
+    magick "$master" -filter Lanczos -resize "${dimensions}^" \
+      -gravity center -extent "$dimensions" -colorspace sRGB -strip \
+      -sampling-factor 4:4:4 -quality 95 -define jpeg:optimize-coding=true \
+      "$destination/$stem.jpg"
+    printf 'Wrote %s/%s.jpg (%s)\n' "$destination" "$stem" "$dimensions"
+  done
+done

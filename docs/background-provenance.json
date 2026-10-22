@@ -1,0 +1,501 @@
+{
+  "direction": "Cinematic 1999 Matrix: restrained green, believable spaces, film texture.",
+  "default_background": "backgrounds/0-hotel-corridor.jpg",
+  "cycle": [
+    "backgrounds/0-hotel-corridor.jpg",
+    "backgrounds/3-green-street.jpg",
+    "backgrounds/4-the-office.jpg",
+    "backgrounds/6-after-hours.jpg"
+  ],
+  "default_selection": "Hotel first when no existing matching background or personal-background override exists; Omarchy may advance on reapply. Code rain lives outside the shipped cycle.",
+  "rain": {
+    "source": "Native procedural Cairo/Pango artwork; no image generation, image resizing or interpolated enlargement.",
+    "source_commit": "01b09c3603db68f4623923cb79d82bc49369075a",
+    "renderer": "scripts/render_rain.py",
+    "seed": 1999,
+    "density": 0.82,
+    "scanlines": 0.035,
+    "bloom": 0.22,
+    "profiles": {
+      "matrix": "falling-code",
+      "mono": "mono-rain"
+    },
+    "quiet": {
+      "falling-code": 0.62,
+      "mono-rain": 0.78
+    },
+    "cell": "automatic: 32px base at 2160px short edge; 64px base at 4320px short edge",
+    "native_cells": {
+      "matrix_4k": [
+        18,
+        28,
+        44,
+        64
+      ],
+      "matrix_8k": [
+        36,
+        56,
+        88,
+        128
+      ],
+      "mono_4k": [
+        22,
+        42,
+        62,
+        82
+      ],
+      "mono_8k": [
+        44,
+        84,
+        124,
+        164
+      ]
+    },
+    "exports": "RGB, sRGB palette values, JPEG quality 95, chroma subsampling 0, optimize=True",
+    "dependencies": {
+      "python": "3.14.8",
+      "pillow": "13.0.0",
+      "pycairo": "1.29.2",
+      "cairo": "1.18.6",
+      "pygobject": "3.58.1",
+      "pango": "1.58.2"
+    },
+    "font": {
+      "family": "Noto Sans CJK JP",
+      "file": "/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
+      "sha256": "b76b0433203017ca80401b2ee0dd69350349871c4b19d504c34dbdd80541690a"
+    },
+    "eight_k_peak_rss_mib": 677.5,
+    "outputs": [
+      {
+        "path": "extras/backgrounds-code-4k/1-falling-code.jpg",
+        "size": [
+          3840,
+          2160
+        ],
+        "bytes": 459753,
+        "sha256": "249f606cb708d708ba84e3a304375e9f29cacfb88070d9b6584a681e34eaa359"
+      },
+      {
+        "path": "extras/backgrounds-code-4k/2-mono-rain.jpg",
+        "size": [
+          3840,
+          2160
+        ],
+        "bytes": 189091,
+        "sha256": "9603bdeeeb1804dbdab8545aa5269a293bf466c300d6a9d7976efc4d9357bf12"
+      },
+      {
+        "path": "extras/backgrounds-8k/1-falling-code.jpg",
+        "size": [
+          7680,
+          4320
+        ],
+        "bytes": 1319334,
+        "sha256": "e559192d1e66f0f6a676b3ba43ea572348aa9a61d322418d9fa4359fb0b0d738"
+      },
+      {
+        "path": "extras/backgrounds-8k/2-mono-rain.jpg",
+        "size": [
+          7680,
+          4320
+        ],
+        "bytes": 631215,
+        "sha256": "4d433328ed4baa041cbe590bf5dd9a599eec319ddef0e6cbe76fb994f8e7d592"
+      }
+    ],
+    "original_sha256": {
+      "1-falling-code.jpg": "7324665257aab7220d7f8e1aa2d44c47507a8976d5cba49aafe5901bb8e17e0c",
+      "2-mono-rain.jpg": "557a3ee37c25bc7e65263def646652237f264c812120385b3d45465653643f77"
+    },
+    "reproduce": [
+      "python scripts/render_rain.py extras/backgrounds-code-4k --width 3840 --height 2160 --seed 1999 --palette both --profile auto",
+      "python scripts/render_rain.py extras/backgrounds-8k --width 7680 --height 4320 --seed 1999 --palette both --profile auto"
+    ],
+    "test_command": "python -m unittest discover -s tests -v",
+    "renderer_sha256": "7e7a075b6efe536e9ac142e0465336f55d1dbcad4fac7498454aafc5cef0ddfb",
+    "validation": {
+      "unittest": "15 tests passed after integration",
+      "git_diff_check": "passed",
+      "strict_mono_grayscale": "both 4K and 8K passed",
+      "masters_match_jpegs": "all four byte-identical to quality-95 4:4:4 export of native PNG masters",
+      "visual_review": "originals, two green pilots, two mono drafts, native 4K/8K crops, representative 100%/150% opaque windows, 16:10 and ultrawide crops"
+    },
+    "role": "Optional native renderings; excluded from the default cinematic cycle."
+  },
+  "cinematic": {
+    "generation_tool": "Built-in image_gen.imagegen; no paid API fallback used",
+    "prompts": "docs/background-prompts.json",
+    "upscaler": {
+      "name": "SeedVR2 / installed ComfyUI image workflow",
+      "model": "seedvr2_3b_fp16.safetensors",
+      "vae": "seedvr2_ema_vae_fp16.safetensors",
+      "scale": 4,
+      "seed": 17,
+      "steps": 1,
+      "cfg": 1,
+      "sampler": "euler",
+      "scheduler": "simple",
+      "color_correction": "none",
+      "vae_tile_size": 512,
+      "vae_overlap": 64,
+      "disable_async_offload": true,
+      "installed_configuration_changed": false,
+      "intermediate_size": [
+        6688,
+        3764
+      ],
+      "installation": {
+        "directory": "/home/bernardv/Work/seedvr2",
+        "tutorial": "https://docs.comfy.org/tutorials/utility/seedvr2",
+        "configuration_changed": false,
+        "installed_or_updated": false,
+        "comfyui_version": "0.42.1",
+        "comfyui_commit": "63be2f9b82ad0dac88a7ceaa28a9cf3154125a18",
+        "torch": "2.14.1+rocm7.2",
+        "python": "3.13.17",
+        "model": "seedvr2_3b_fp16.safetensors",
+        "vae": "seedvr2_ema_vae_fp16.safetensors",
+        "async_offload_disabled": true,
+        "run_server_sha256": "7737da50854ae3bd8b441ce55a24966f752a51e0a2d5280d889ec60b5a1476fc",
+        "workflow_sha256": "f4a5110d1d7e5796e48db844035a799b2d74d031b4f6c99faabadfd8532e0392"
+      },
+      "run_records": [
+        "output/seedvr2-matrix-comparison-20261022-r1",
+        "output/seedvr2-after-hours-20261022-r1"
+      ]
+    },
+    "export": {
+      "script": "scripts/export_stills",
+      "image_magick_version": "7.1.2-34 Q16-HDRI",
+      "resize": "Lanczos, fill target uniformly, minimal center crop to exact 16:9",
+      "colorspace": "sRGB",
+      "format": "JPEG",
+      "quality": 95,
+      "chroma": "4:4:4",
+      "extra_sharpening": false
+    },
+    "native_resolution_warning": "All four cinematic sources are generated 1672x941 PNGs; 4K/6K exports are AI-upscaled.",
+    "artworks": [
+      {
+        "selected_candidate": "hotel-a",
+        "source": {
+          "path": "extras/background-sources/5-hotel-corridor.png",
+          "size": [
+            1672,
+            941
+          ],
+          "bytes": 2105359,
+          "sha256": "a39ff0dc80b5de1e717c2418c2e9b02cd7f0f4c452dc7cd4332cff77a637221e"
+        },
+        "master": {
+          "path": "output/seedvr2-matrix-comparison-20261022-r1/masters/5-hotel-corridor-x4.png",
+          "api_output": "/home/bernardv/Work/seedvr2/data/output/SeedVR2/matrix/seedvr2-matrix-comparison-20261022-r1/5-hotel-corridor_00001_.png",
+          "size": [
+            6688,
+            3764
+          ],
+          "sha256": "4b2462d032523b90bd59c2526c09a2510a9efc4e3de081c52da6f101b9b97ab8",
+          "prompt_id": "cb49a431-cad8-4b88-a2c2-965648f3babc"
+        },
+        "outputs": [
+          {
+            "path": "backgrounds/0-hotel-corridor.jpg",
+            "size": [
+              3840,
+              2160
+            ],
+            "bytes": 3084501,
+            "sha256": "7196ddb85610bb6b67daf2331c338b525131911685ae474af51e6084b73f6395"
+          },
+          {
+            "path": "extras/backgrounds-6k/0-hotel-corridor.jpg",
+            "size": [
+              6144,
+              3456
+            ],
+            "bytes": 6701194,
+            "sha256": "ea28d4bdedda954acea9f536105a4a7032d12c77515f3fac6d818cf26abd7646"
+          }
+        ]
+      },
+      {
+        "selected_candidate": "street-d",
+        "source": {
+          "path": "extras/background-sources/3-green-street.png",
+          "size": [
+            1672,
+            941
+          ],
+          "bytes": 2209961,
+          "sha256": "488c715b7e34bfbf1cdf72cd45cde68ccf3bda2b49d7a83a2909e143c9c90a3a"
+        },
+        "master": {
+          "path": "output/seedvr2-matrix-comparison-20261022-r1/masters/3-green-street-x4.png",
+          "api_output": "/home/bernardv/Work/seedvr2/data/output/SeedVR2/matrix/seedvr2-matrix-comparison-20261022-r1/3-green-street_00001_.png",
+          "size": [
+            6688,
+            3764
+          ],
+          "sha256": "6af960f08f989833992fbfcbda95bfa96b3bd13ab5950243ea5354b0a0467c66",
+          "prompt_id": "a6392195-d4a2-4fde-b253-7e0ee4fc7f40"
+        },
+        "outputs": [
+          {
+            "path": "backgrounds/3-green-street.jpg",
+            "size": [
+              3840,
+              2160
+            ],
+            "bytes": 3106306,
+            "sha256": "09ecfb136d06d78df977ff14ba9b5ed998a975897c025a571222316d27c72fdf"
+          },
+          {
+            "path": "extras/backgrounds-6k/3-green-street.jpg",
+            "size": [
+              6144,
+              3456
+            ],
+            "bytes": 6570022,
+            "sha256": "d79c12abfbb624f90d9d9c46086eb19963031d932d35ade5d50b19c041603e50"
+          }
+        ]
+      },
+      {
+        "selected_candidate": "office-b",
+        "source": {
+          "path": "extras/background-sources/4-the-office.png",
+          "size": [
+            1672,
+            941
+          ],
+          "bytes": 1740062,
+          "sha256": "170d40c6e4527d3fc10af4deeb520eda7ab51c249292b7990b923cbec9d9dba0"
+        },
+        "master": {
+          "path": "output/seedvr2-matrix-comparison-20261022-r1/masters/4-the-office-x4.png",
+          "api_output": "/home/bernardv/Work/seedvr2/data/output/SeedVR2/matrix/seedvr2-matrix-comparison-20261022-r1/4-the-office_00001_.png",
+          "size": [
+            6688,
+            3764
+          ],
+          "sha256": "741488fbd195d21260f64e15793ceccf5e2f86897a618715a5102b2b82ae8806",
+          "prompt_id": "d661c184-0216-4738-9603-18a579c57e8c"
+        },
+        "outputs": [
+          {
+            "path": "backgrounds/4-the-office.jpg",
+            "size": [
+              3840,
+              2160
+            ],
+            "bytes": 2047149,
+            "sha256": "bb7655b14d15a82db31420ebb1ef36bbb9d1eecd9a18f9362f64c6f440bc293c"
+          },
+          {
+            "path": "extras/backgrounds-6k/4-the-office.jpg",
+            "size": [
+              6144,
+              3456
+            ],
+            "bytes": 4647093,
+            "sha256": "78c1f9ec2af6906364bd9d2e954806c242330f3504be5468afd93d60946efc99"
+          }
+        ]
+      },
+      {
+        "selected_candidate": "after-hours-original",
+        "source": {
+          "path": "extras/background-sources/6-after-hours.png",
+          "size": [
+            1672,
+            941
+          ],
+          "bytes": 1717022,
+          "sha256": "15741d1a9086e55e5758887c40445dd9fa184b6086bd2cc1d276783f07eedf4f"
+        },
+        "master": {
+          "path": "output/seedvr2-after-hours-20261022-r1/masters/6-after-hours-x4.png",
+          "api_output": "/home/bernardv/Work/seedvr2/data/output/SeedVR2/matrix/seedvr2-after-hours-20261022-r1/6-after-hours_00001_.png",
+          "size": [
+            6688,
+            3764
+          ],
+          "sha256": "d935510faf5be7483f1c00131656bf49a3d9d49efd961fd0a06a9e3495599d60",
+          "prompt_id": "cf20eb02-7101-4179-9f98-b5fa9e29a402"
+        },
+        "outputs": [
+          {
+            "path": "backgrounds/6-after-hours.jpg",
+            "size": [
+              3840,
+              2160
+            ],
+            "bytes": 2251519,
+            "sha256": "e0c9552d946273de81da3c716ba7af3d1db7ea7c0add18e7ddea24a724a95d08"
+          },
+          {
+            "path": "extras/backgrounds-6k/6-after-hours.jpg",
+            "size": [
+              6144,
+              3456
+            ],
+            "bytes": 5262355,
+            "sha256": "119062f0f9344e216d0007ba5de4db775c64db036e04b4add54ff58803d4eb1c"
+          }
+        ],
+        "source_recovered_from": "d3bf00f77c376cd9b9a3f7ae61f6e7db52ce354c:docs/wallpaper-review/after-hours-source.png"
+      }
+    ]
+  },
+  "archived_real_esrgan": {
+    "generation_tool": "Built-in image_gen.imagegen; no paid API fallback used",
+    "prompts": "docs/background-prompts.json",
+    "upscaler": {
+      "name": "Real-ESRGAN NCNN/Vulkan",
+      "release": "20220424 / v0.2.5.0",
+      "url": "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip",
+      "archive_sha256": "e5aa6eb131234b87c0c51f82b89390f5e3e642b7b70f2b9bbe95b6a285a40c96",
+      "model": "realesrgan-x4plus",
+      "scale": 4,
+      "tile": 256,
+      "threads": "1:1:1",
+      "tta": false,
+      "intermediate_size": [
+        6688,
+        3764
+      ]
+    },
+    "export": {
+      "script": "scripts/export_stills_realesrgan",
+      "image_magick_version": "7.1.2-34 Q16-HDRI",
+      "resize": "Lanczos, fill target uniformly, minimal center crop to exact 16:9",
+      "colorspace": "sRGB",
+      "format": "JPEG",
+      "quality": 95,
+      "chroma": "4:4:4",
+      "extra_sharpening": false
+    },
+    "native_resolution_warning": "4K and 6K cinematic files are AI-upscaled from 1672x941 generated sources, not native 4K/6K captures or generations.",
+    "artworks": [
+      {
+        "selected_candidate": "street-d",
+        "source": {
+          "path": "extras/background-sources/3-green-street.png",
+          "size": [
+            1672,
+            941
+          ],
+          "bytes": 2209961,
+          "sha256": "488c715b7e34bfbf1cdf72cd45cde68ccf3bda2b49d7a83a2909e143c9c90a3a"
+        },
+        "outputs": [
+          {
+            "path": "extras/backgrounds-realesrgan-4k/3-green-street.jpg",
+            "size": [
+              3840,
+              2160
+            ],
+            "bytes": 2381130,
+            "sha256": "da96c106eb430d77f3a1e702d927a25497bde6e9263ec322518db858f55d5bd0"
+          },
+          {
+            "path": "extras/backgrounds-realesrgan-6k/3-green-street.jpg",
+            "size": [
+              6144,
+              3456
+            ],
+            "bytes": 5012644,
+            "sha256": "25f75a7e68962720fc947a513b85c4ad1ef39b288571614c1458deba848216ab"
+          }
+        ]
+      },
+      {
+        "selected_candidate": "office-b",
+        "source": {
+          "path": "extras/background-sources/4-the-office.png",
+          "size": [
+            1672,
+            941
+          ],
+          "bytes": 1740062,
+          "sha256": "170d40c6e4527d3fc10af4deeb520eda7ab51c249292b7990b923cbec9d9dba0"
+        },
+        "outputs": [
+          {
+            "path": "extras/backgrounds-realesrgan-4k/4-the-office.jpg",
+            "size": [
+              3840,
+              2160
+            ],
+            "bytes": 1330883,
+            "sha256": "f72123493e717ca38fc4e3ef48ac4fb85233059f715ad917f9a89744cb6fe58c"
+          },
+          {
+            "path": "extras/backgrounds-realesrgan-6k/4-the-office.jpg",
+            "size": [
+              6144,
+              3456
+            ],
+            "bytes": 3168780,
+            "sha256": "6b29a0d7dbb336ea84bcab4d43616025090a5a2b0447f5c99381dcf9d53380e6"
+          }
+        ]
+      },
+      {
+        "selected_candidate": "hotel-a",
+        "source": {
+          "path": "extras/background-sources/5-hotel-corridor.png",
+          "size": [
+            1672,
+            941
+          ],
+          "bytes": 2105359,
+          "sha256": "a39ff0dc80b5de1e717c2418c2e9b02cd7f0f4c452dc7cd4332cff77a637221e"
+        },
+        "outputs": [
+          {
+            "path": "extras/backgrounds-realesrgan-4k/5-hotel-corridor.jpg",
+            "size": [
+              3840,
+              2160
+            ],
+            "bytes": 2224286,
+            "sha256": "cd21efeab2ec21b7c679150d14ab98da2eb1c1d571ee8dcba4356b48d1abb63e"
+          },
+          {
+            "path": "extras/backgrounds-realesrgan-6k/5-hotel-corridor.jpg",
+            "size": [
+              6144,
+              3456
+            ],
+            "bytes": 4792326,
+            "sha256": "136a79f8f11880c179d94f5be616595d767ce0e1f39ecc48643232470a76fa88"
+          }
+        ]
+      }
+    ],
+    "after_hours": {
+      "path": "extras/backgrounds-realesrgan-4k/6-after-hours.jpg",
+      "size": [
+        3840,
+        2160
+      ],
+      "bytes": 1371433,
+      "sha256": "fb70b2650432e85a90771fe763b52c5255f0c04085d7ee88101a41fd39de8ea5",
+      "note": "Original Real-ESRGAN export blended with a resized source; preserved unchanged."
+    }
+  },
+  "validation": {
+    "api": "All four SeedVR2 prompts completed successfully",
+    "service_stopped": true,
+    "source_master_preservation": "All source PNGs, API masters, project master copies and native rain hashes verified",
+    "defaults": "Four cinematic JPEGs only, Hotel Corridor sorts first; code rain optional",
+    "visual_review": "Earlier three scenes reviewed in source/master/4K. After Hours master, CRT crop and wall/cabinet crop inspected; composition retained with stronger material texture and irregular tiny hardware.",
+    "unittest": "45 tests passed (17 SeedVR2 runner, 13 still exporter, 15 theme checks)",
+    "live_desktop": "No theme applied; current system theme unchanged.",
+    "default_selection": "Installed Omarchy chooser exercised in isolation: fresh, previous theme, both former rain selections, Hotel reapply and wraparound passed. No live state changed.",
+    "exports": "Eight cinematic JPEGs decoded at exact 4K/6K RGB dimensions and 4:4:4 sampling; all recorded current/source/archive hashes matched.",
+    "git_diff_check": "passed"
+  }
+}
